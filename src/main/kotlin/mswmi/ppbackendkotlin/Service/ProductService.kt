@@ -1,20 +1,22 @@
 package mswmi.ppbackendkotlin.Service
 
+
+import mswmi.ppbackendkotlin.Repository.ProductRepository
 import mswmi.ppbackendkotlin.dto.ProductDto
+import mswmi.ppbackendkotlin.entity.Product
 import org.springframework.aot.hint.TypeReference.listOf
+import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 import java.util.*
 
 @Service
-class ProductService {
-    public fun getProducts(): List<ProductDto> {
-        //db query
-        val prod1: ProductDto = ProductDto(123, "nazwa", "opis", 12.34)
-        val prod2: ProductDto = ProductDto(1234, "nazwa", "opis", 12.34)
-
-        val result = ArrayList<ProductDto>()
-        result.add(prod1)
-        result.add(prod2)
-        return result
+class ProductService(private val productRepository: ProductRepository) {
+    public fun getProducts(): ResponseEntity<List<ProductDto>> {
+        val products: List<Product> = productRepository.findAll()
+        val productDtos: MutableList<ProductDto> = mutableListOf()
+        for (product in products) {
+            productDtos.add(productRepository.productToDto(product))
+        }
+        return ResponseEntity.ok(productDtos)
     }
 }
