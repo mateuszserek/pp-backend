@@ -6,8 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 
 interface ProductRepository : JpaRepository<Product, Long> {
-    fun findByNameAndId(name: String, id: Long): Product?
-
     fun productToDto(product: Product): ProductDto {
         val dto = ProductDto(
             id=product.id,

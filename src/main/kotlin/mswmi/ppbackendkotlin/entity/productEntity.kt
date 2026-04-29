@@ -14,9 +14,9 @@ data class Product(
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     val id: Long = 0,
-    val name: String = "",
-    val description: String = "",
-    val price: Double = 0.0,
+    var name: String = "",
+    var description: String = "",
+    var price: Double = 0.0,
     @Column(name = "created_at", updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now()
 )
