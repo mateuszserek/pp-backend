@@ -1,29 +1,41 @@
 package mswmi.ppbackendkotlin.Service
 
-
 import mswmi.ppbackendkotlin.Repository.ProductRepository
+import mswmi.ppbackendkotlin.dto.ProductCreationDto
 import mswmi.ppbackendkotlin.dto.ProductDto
+import mswmi.ppbackendkotlin.dto.ProductResponse
 import mswmi.ppbackendkotlin.entity.Product
-import org.springframework.aot.hint.TypeReference.listOf
+import org.springframework.data.domain.PageRequest
+import org.springframework.data.domain.Slice
+import org.springframework.data.domain.Sort
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
-import java.util.*
 
 @Service
 class ProductService(private val productRepository: ProductRepository) {
-    public fun getProducts(): ResponseEntity<List<ProductDto>> {
-        val products: List<Product> = productRepository.findAll()
-        val productDtos: MutableList<ProductDto> = mutableListOf()
-        for (product in products) {
-            productDtos.add(productRepository.productToDto(product))
-        }
-        return ResponseEntity.ok(productDtos)
+    private val numberOfProducts = 6
+    private fun calculateNextQuery(pageNum: Int, pageSize: Int) : String{
+        val nextPageSkip = pageNum + 1
+        val nextQuery = "?pageNum=${nextPageSkip}&pageSize=$pageSize"
+        return nextQuery
     }
 
-    public fun addProduct(product: ProductDto): ResponseEntity<ProductDto> {
+    public fun getProducts(pageNum: Int, pageSize: Int): ResponseEntity<ProductResponse> {
+        val pageable = PageRequest.of(
+            pageNum,
+            pageSize,
+            Sort.by(Sort.Direction.ASC, "id")
+        )
+        val result: Slice<Product> = productRepository.findAll(pageable)
+        val hasNextPage = result.hasNext()
+        val productDtos = result.content.map { productRepository.productToDto(it) }
+        val nextQuery = if (hasNextPage)  calculateNextQuery(pageNum, pageSize) else null
+        return ResponseEntity.ok(ProductResponse(productDtos, nextQuery))
+    }
+
+    public fun addProduct(product: ProductCreationDto): ResponseEntity<ProductDto> {
         val productEntity = Product(
-            id = product.id,
             name = product.name,
             description = product.description,
             price = product.price

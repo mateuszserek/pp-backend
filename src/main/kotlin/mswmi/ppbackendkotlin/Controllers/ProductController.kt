@@ -1,7 +1,9 @@
 package mswmi.ppbackendkotlin.Controllers
 
 import mswmi.ppbackendkotlin.Service.ProductService
+import mswmi.ppbackendkotlin.dto.ProductCreationDto
 import mswmi.ppbackendkotlin.dto.ProductDto
+import mswmi.ppbackendkotlin.dto.ProductResponse
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
@@ -16,11 +18,14 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/products")
 class ProductController(private val productService: ProductService) {
     @GetMapping()
-    fun getProducts(): ResponseEntity<List<ProductDto>> = productService.getProducts()
+    fun getProducts(
+        @RequestParam("pageNum") pageNum: Int,
+        @RequestParam("pageSize") pageSize: Int,
+    ): ResponseEntity<ProductResponse> = productService.getProducts(pageNum, pageSize)
 
     @PostMapping()
     fun addProduct(
-        @RequestBody product: ProductDto
+        @RequestBody product: ProductCreationDto
     ): ResponseEntity<ProductDto> = productService.addProduct(product)
 
     @DeleteMapping()
