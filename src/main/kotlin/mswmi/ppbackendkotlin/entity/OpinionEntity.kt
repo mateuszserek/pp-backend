@@ -21,7 +21,7 @@ data class Opinion(
     val productId: Long = 0,
 
     @Column(columnDefinition = "TEXT", nullable = false)
-    val opinion: String = "",
+    var opinion: String = "",
 
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)

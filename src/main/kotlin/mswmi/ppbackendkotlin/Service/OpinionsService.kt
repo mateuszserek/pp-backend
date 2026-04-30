@@ -10,6 +10,7 @@ import mswmi.ppbackendkotlin.entity.Product
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
+import org.springframework.data.repository.findByIdOrNull
 import org.springframework.http.ResponseEntity
 import org.springframework.stereotype.Service
 
@@ -31,6 +32,14 @@ class OpinionsService(private val opinionsRepository: OpinionsRepository) {
             productId = opinion.productId,
             opinion = opinion.opinion
         )
+        opinionsRepository.save(opinionEntity)
+        return ResponseEntity.ok(opinionsRepository.opinionToDto(opinionEntity))
+    }
+
+    public fun updateOpinion(opinion: OpinionDto): ResponseEntity<OpinionDto> {
+        val opinionEntity: Opinion? = opinionsRepository.findByIdOrNull(opinion.id)
+        opinionEntity ?: throw(IllegalArgumentException("Opinion with id ${opinion.id} not found"))
+        opinionEntity.opinion = opinion.opinion
         opinionsRepository.save(opinionEntity)
         return ResponseEntity.ok(opinionsRepository.opinionToDto(opinionEntity))
     }

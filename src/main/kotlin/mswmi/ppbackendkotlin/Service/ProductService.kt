@@ -44,7 +44,7 @@ class ProductService(private val productRepository: ProductRepository) {
 
     public fun updateProduct(product: ProductDto): ResponseEntity<ProductDto> {
         val productEntity: Product? = productRepository.findByIdOrNull(product.id)
-        productEntity ?: throw(IllegalArgumentException("Product not found"))
+        productEntity ?: throw(IllegalArgumentException("Product with id ${product.id} not found"))
         productEntity.name = product.name
         productEntity.description = product.description
         productEntity.price = product.price

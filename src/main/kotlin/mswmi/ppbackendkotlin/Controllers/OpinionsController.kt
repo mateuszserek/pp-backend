@@ -2,7 +2,9 @@ package mswmi.ppbackendkotlin.Controllers
 
 import mswmi.ppbackendkotlin.Service.OpinionsService
 import mswmi.ppbackendkotlin.dto.OpinionCreationDto
+import mswmi.ppbackendkotlin.dto.OpinionDto
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PatchMapping
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,4 +25,9 @@ class OpinionsController(private val opinionsService: OpinionsService) {
     fun addOpinion(
         @RequestBody opinion: OpinionCreationDto
     ) = opinionsService.addOpinion(opinion)
+
+    @PatchMapping()
+    fun updateOpinion(
+        @RequestBody opinion: OpinionDto
+    ) = opinionsService.updateOpinion(opinion)
 }
