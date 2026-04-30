@@ -19,8 +19,8 @@ import org.springframework.web.bind.annotation.RestController
 class ProductController(private val productService: ProductService) {
     @GetMapping()
     fun getProducts(
-        @RequestParam("pageNum") pageNum: Int,
-        @RequestParam("pageSize") pageSize: Int,
+        @RequestParam("pageNum", defaultValue = "0") pageNum: Int,
+        @RequestParam("pageSize", defaultValue = "10") pageSize: Int,
     ): ResponseEntity<ProductResponse> = productService.getProducts(pageNum, pageSize)
 
     @PostMapping()

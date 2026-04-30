@@ -15,22 +15,13 @@ import org.springframework.stereotype.Service
 @Service
 class ProductService(private val productRepository: ProductRepository) {
     private val numberOfProducts = 6
-    private fun calculateNextQuery(pageNum: Int, pageSize: Int) : String{
-        val nextPageSkip = pageNum + 1
-        val nextQuery = "?pageNum=${nextPageSkip}&pageSize=$pageSize"
-        return nextQuery
-    }
 
     public fun getProducts(pageNum: Int, pageSize: Int): ResponseEntity<ProductResponse> {
-        val pageable = PageRequest.of(
-            pageNum,
-            pageSize,
-            Sort.by(Sort.Direction.ASC, "id")
-        )
+        val pageable = RestFunctions.getPageableObject(pageNum, pageSize)
         val result: Slice<Product> = productRepository.findAll(pageable)
         val hasNextPage = result.hasNext()
         val productDtos = result.content.map { productRepository.productToDto(it) }
-        val nextQuery = if (hasNextPage)  calculateNextQuery(pageNum, pageSize) else null
+        val nextQuery = if (hasNextPage)  RestFunctions.calculateNextQuery(pageNum, pageSize) else null
         return ResponseEntity.ok(ProductResponse(productDtos, nextQuery))
     }
 
