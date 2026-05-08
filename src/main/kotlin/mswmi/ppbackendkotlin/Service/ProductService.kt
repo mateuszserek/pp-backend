@@ -5,6 +5,7 @@ import mswmi.ppbackendkotlin.dto.ProductCreationDto
 import mswmi.ppbackendkotlin.dto.ProductDto
 import mswmi.ppbackendkotlin.dto.ProductResponse
 import mswmi.ppbackendkotlin.entity.Product
+import mswmi.ppbackendkotlin.mappers.EntityMappers
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Slice
 import org.springframework.data.domain.Sort
@@ -20,7 +21,7 @@ class ProductService(private val productRepository: ProductRepository) {
         val pageable = RestFunctions.getPageableObject(pageNum, pageSize)
         val result: Slice<Product> = productRepository.findAll(pageable)
         val hasNextPage = result.hasNext()
-        val productDtos = result.content.map { productRepository.productToDto(it) }
+        val productDtos = result.content.map { EntityMappers.productToDto(it) }
         val nextQuery = if (hasNextPage)  RestFunctions.calculateNextQuery(pageNum, pageSize) else null
         return ResponseEntity.ok(ProductResponse(productDtos, nextQuery))
     }
@@ -32,14 +33,14 @@ class ProductService(private val productRepository: ProductRepository) {
             price = product.price
         )
         productRepository.save(productEntity)
-        return ResponseEntity.ok(productRepository.productToDto(productEntity))
+        return ResponseEntity.ok(EntityMappers.productToDto(productEntity))
     }
 
     public fun deleteProduct(productId: Long): ResponseEntity<ProductDto> {
         val productEntity: Product? = productRepository.findByIdOrNull(productId)
         productEntity ?: throw(IllegalArgumentException("Product not found"))
         productRepository.deleteById(productId)
-        return ResponseEntity.ok(productRepository.productToDto(productEntity))
+        return ResponseEntity.ok(EntityMappers.productToDto(productEntity))
     }
 
     public fun updateProduct(product: ProductDto): ResponseEntity<ProductDto> {
@@ -49,6 +50,6 @@ class ProductService(private val productRepository: ProductRepository) {
         productEntity.description = product.description
         productEntity.price = product.price
         productRepository.save(productEntity)
-        return ResponseEntity.ok(productRepository.productToDto(productEntity))
+        return ResponseEntity.ok(EntityMappers.productToDto(productEntity))
     }
 }

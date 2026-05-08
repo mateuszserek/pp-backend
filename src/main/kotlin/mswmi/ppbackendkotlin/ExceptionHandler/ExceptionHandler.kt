@@ -34,7 +34,7 @@ class GlobalExceptionHandler {
         val errorResponse = ErrorResponse(
             LocalDateTime.now().toString(),
             HttpStatus.INTERNAL_SERVER_ERROR.value(),
-            "Unexpected Server Error"
+            "ex.message=${ex.message}"
         )
         return ResponseEntity(errorResponse, HttpStatus.INTERNAL_SERVER_ERROR)
     }

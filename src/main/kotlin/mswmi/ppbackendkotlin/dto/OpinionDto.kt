@@ -6,7 +6,8 @@ data class OpinionDto(
     val id: Long,
     val productId: Long,
     val opinion: String,
-    val createdAt: LocalDateTime
+    val createdAt: LocalDateTime,
+    val createdBy: UserDto
 )
 
 data class OpinionCreationDto(
