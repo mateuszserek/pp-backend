@@ -8,7 +8,9 @@ data class ProductDto (
     val description: String,
     val price: Double,
     val createdAt: LocalDateTime? = null
-)
+) {
+    constructor() : this(0, "", "", 0.0, LocalDateTime.now())
+}
 
 data class ProductCreationDto (
     val name: String,
@@ -18,5 +20,5 @@ data class ProductCreationDto (
 
 data class ProductResponse(
     val value: List<ProductDto>,
-    val nextPage: String? = null
+    val nextQuery: String? = null
 )

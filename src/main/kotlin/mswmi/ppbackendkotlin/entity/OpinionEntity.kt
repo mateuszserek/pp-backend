@@ -23,7 +23,7 @@ data class Opinion(
 
     @ManyToOne
     @JoinColumn(name = "productId", nullable = false)
-    val product: Product,
+    val product: Product = Product(),
 
     @ManyToOne
     @JoinColumn(name = "userId", nullable = false)

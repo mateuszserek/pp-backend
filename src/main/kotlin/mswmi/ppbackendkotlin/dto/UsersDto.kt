@@ -6,3 +6,7 @@ data class UserDto(
     val lastName: String,
     val email: String,
 )
+
+data class UsersResponse(
+    val value: UserDto?
+)
