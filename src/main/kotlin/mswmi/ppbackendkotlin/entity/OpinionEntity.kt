@@ -35,6 +35,9 @@ data class Opinion(
     @CreationTimestamp
     @Column(name = "created_at", nullable = false, updatable = false)
     val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name = "is_deleted", nullable = false)
+    var isDeleted: Boolean = false
 ) {
-    constructor() : this(0, Product(), User(), "", LocalDateTime.now())
+    constructor() : this(0, Product(), User(), "", LocalDateTime.now(), false)
 }

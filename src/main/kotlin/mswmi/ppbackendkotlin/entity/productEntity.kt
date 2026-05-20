@@ -27,5 +27,8 @@ data class Product(
     var price: Double = 0.0,
 
     @Column(name = "created_at", nullable = false)
-    val createdAt: LocalDateTime = LocalDateTime.now()
+    val createdAt: LocalDateTime = LocalDateTime.now(),
+
+    @Column(name="is_deleted", nullable = false)
+    var isDeleted: Boolean = false
 )

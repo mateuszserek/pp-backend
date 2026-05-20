@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 
 interface ProductRepository : JpaRepository<Product, Long> {
     override fun findAll(pagable: Pageable): Page<Product>
+
+    fun findByIsDeleted(isDeleted: Boolean, pageable: Pageable): Page<Product>
 }

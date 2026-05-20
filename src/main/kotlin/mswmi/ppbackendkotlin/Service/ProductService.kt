@@ -19,7 +19,7 @@ class ProductService(private val productRepository: ProductRepository) {
 
     public fun getProducts(pageNum: Int, pageSize: Int): ResponseEntity<ProductResponse> {
         val pageable = RestFunctions.getPageableObject(pageNum, pageSize)
-        val result: Slice<Product> = productRepository.findAll(pageable)
+        val result: Slice<Product> = productRepository.findByIsDeleted(false, pageable)
         val hasNextPage = result.hasNext()
         val productDtos = result.content.map { EntityMappers.productToDto(it) }
         val nextQuery = if (hasNextPage)  RestFunctions.calculateNextQuery(pageNum, pageSize) else null
@@ -39,7 +39,8 @@ class ProductService(private val productRepository: ProductRepository) {
     public fun deleteProduct(productId: Long): ResponseEntity<ProductDto> {
         val productEntity: Product? = productRepository.findByIdOrNull(productId)
         productEntity ?: throw(IllegalArgumentException("Product not found"))
-        productRepository.deleteById(productId)
+        productEntity.isDeleted = true
+        productRepository.save(productEntity)
         return ResponseEntity.ok(EntityMappers.productToDto(productEntity))
     }
 
